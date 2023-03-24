@@ -1,17 +1,20 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
-from src.schemas.schemas import Pedido
+from src.schemas.schemas import Pedido, Usuario
+from src.routers.utils import obter_usuario_logado
 from src.infra.sqlalchemy.config.database import get_db
 from src.infra.sqlalchemy.repositories.pedido import RepositorioPedido
 
 router = APIRouter()
 
+# atualizar rotas autenticadas para usar como abaixo, ver como lidar com o usuario.id que pode ser nulo
 
-@router.get('/pedidos/{usuario_id}/compras', response_model=List[Pedido])
-def listar_pedidos(usuario_id: int, session: Session = Depends(get_db)):
+
+@router.get('/pedidos', response_model=List[Pedido])
+def listar_pedidos(usuario: Usuario = Depends(obter_usuario_logado), session: Session = Depends(get_db)):
     pedidos = RepositorioPedido(
-        session).listar_meus_pedidos_por_usuario_id(usuario_id)
+        session).listar_meus_pedidos_por_usuario_id(usuario.id)
     return pedidos
 
 

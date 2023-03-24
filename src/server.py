@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routers import produtos, usuarios, pedidos
+from src.routers import produtos, pedidos, auth
 
 app = FastAPI()
 
@@ -16,8 +16,8 @@ app.add_middleware(CORSMiddleware,
 # PRODUTOS
 app.include_router(produtos.router)
 
-# USUARIOS
-app.include_router(usuarios.router)
+# SEGURANÇA: Autenticação e Autorização
+app.include_router(auth.router, prefix="/auth")
 
 # PEDIDOS
 app.include_router(pedidos.router)
